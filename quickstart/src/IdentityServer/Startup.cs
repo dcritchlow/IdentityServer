@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
+using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,13 +21,32 @@ namespace IdentityServer
 
         public void ConfigureServices(IServiceCollection services)
         {
-            // uncomment, if you want to add an MVC-based UI
-            //services.AddControllersWithViews();
+            services.AddControllersWithViews();
 
             var builder = services.AddIdentityServer()
                 .AddInMemoryIdentityResources(Config.Ids)
                 .AddInMemoryApiResources(Config.Apis)
                 .AddInMemoryClients(Config.Clients);
+
+            JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
+
+            services.AddAuthentication(options =>
+                {
+                    options.DefaultScheme = "Cookies";
+                    options.DefaultChallengeScheme = "oidc";
+                })
+                .AddCookie("Cookies")
+                .AddOpenIdConnect("oidc", options =>
+                {
+                    options.Authority = "http://localhost:5000";
+                    options.RequireHttpsMetadata = false;
+
+                    options.ClientId = "mvc";
+                    options.ClientSecret = "secret";
+                    options.ResponseType = "code";
+
+                    options.SaveTokens = true;
+                });
 
             // not recommended for production - you need to store your key material somewhere secure
             builder.AddDeveloperSigningCredential();
@@ -39,18 +59,16 @@ namespace IdentityServer
                 app.UseDeveloperExceptionPage();
             }
 
-            // uncomment if you want to add MVC
-            //app.UseStaticFiles();
-            //app.UseRouting();
-
+            app.UseStaticFiles();
+            app.UseRouting();
+            app.UseAuthentication();
             app.UseIdentityServer();
 
-            // uncomment, if you want to add MVC
-            //app.UseAuthorization();
-            //app.UseEndpoints(endpoints =>
-            //{
-            //    endpoints.MapDefaultControllerRoute();
-            //});
+            app.UseAuthorization();
+            app.UseEndpoints(endpoints =>
+            {
+               endpoints.MapDefaultControllerRoute();
+            });
         }
     }
 }
