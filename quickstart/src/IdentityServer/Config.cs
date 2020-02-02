@@ -26,6 +26,7 @@ namespace IdentityServer
         public static IEnumerable<Client> Clients =>
             new List<Client>
             {
+                // machine to machine client
                 new Client
                 {
                     ClientId = "client",
