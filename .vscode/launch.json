@@ -10,7 +10,7 @@
             "request": "launch",
             "preLaunchTask": "build IdentityServer",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/quickstart/src/IdentityServer/bin/Debug/netcoreapp3.0/IdentityServer.dll",
+            "program": "${workspaceFolder}/quickstart/src/IdentityServer/bin/Debug/netcoreapp3.1/IdentityServer.dll",
             "args": [],
             "cwd": "${workspaceFolder}/quickstart/src/IdentityServer",
             "stopAtEntry": false,
