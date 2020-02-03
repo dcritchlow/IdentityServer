@@ -350,3 +350,6 @@ MigrationBackup/
 .ionide/
 quickstart/src/IdentityServer/tempkey.rsa
 google-connection-string
+quickstart/src/IdentityServerAspNetIdentity/appsettings.json
+quickstart/src/IdentityServer/appsettings.json
+**/*tempkey.rsa
